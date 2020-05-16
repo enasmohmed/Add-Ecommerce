@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+{% block content %}
+
+<body class="login-page">
+<div id="page">
+  <!-- Navigation -->
+  <section class="main-container col1-layout">
+    <div class="main container">
+      <div class="account-login">
+        <div class="page-title">
+          <h2>SignUp Account</h2>
+        </div>
+        <fieldset>
+          <div class="registered-users"><strong>Registered Customers</strong>
+            <div class="content">
+              <p>If you have an account with us, please log in.</p>
+               <form  method="POST">
+                    {% csrf_token %}
+                      {{ form.as_p}}
+                     <button  class="btn morpheus-den-gradient" type="submit">Sign Up</button><br><br><br>
+                    <a class="login-face" href="{% provider_login_url 'facebook' %}"><i class="fa fa-facebook-square"></i> Login With facebook </a>
+                   <a class="login-google" href="{% provider_login_url 'google' %}"><i class="fa fa-google"></i> Login With Google </a>
+                </form>
+          </div>
+      </div>
+    </fieldset>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+    </div>
+  </section>
+</div>
+</body>
+{% endblock content %}

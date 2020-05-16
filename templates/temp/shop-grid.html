@@ -1,0 +1,113 @@
+﻿{% extends 'base.html' %}
+{% load static  %}
+{% load i18n %}
+{% block content %}
+<div id="page">
+  <!-- Breadcrumbs -->
+	<div class="breadcrumbs">
+	  <div class="container">
+		<div class="row">
+		  <div class="col-xs-12">
+			<ul>
+			  <li><a href="/" title="Go to Home Page">Home</a><span>/</span></li>
+				{% if fullname %}
+				<li><strong>{{ fullname }}</strong></li>
+				{% else %}
+					 {% for parent in categories %}
+						<li><a title="women" href="{{parent.get_absolute_url}}">{{ parent.name }}</a><span>/</span></li>
+					{% endfor %}
+				{% endif %}
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<!-- Breadcrumbs End -->
+  <!-- Main Container -->
+  <div class="main-container col1-layout">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-xs-12">
+          <article class="col-main">
+            <div class="page-title">
+              <h2>{{fullname}}</h2>
+            </div>
+            <div class="category-products">
+              {% get_current_language as LANGUAGE_CODE %}
+              {% for product in products %}
+              <ul class="products-grid">
+                <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                  <div class="item-inner">
+                    <div class="item-img">
+                      <div class="item-img-info"><a class="product-image" title="Product tilte is here"
+                        href="{{ product.get_absolute_url }}"> <img alt="Product tilte is here" src="{{product.Image.url}}"> </a>
+                        <div class="new-label new-top-left">new</div>
+                        <div class="sale-label sale-top-right">sale</div>
+                      </div>
+                    </div>
+                    <div class="item-info">
+                      <div class="info-inner">
+                        <div class="item-title"> <a title="Product tilte is here"
+                        href="{{ product.get_absolute_url }}">{% if LANGUAGE_CODE == 'ar' %}{{ product.name_ar }}
+                          {% elif  LANGUAGE_CODE == 'fi' %}{{ product.name_fi }}
+                          {% elif LANGUAGE_CODE == 'ur' %} {{ product.name_ur }}
+                          {% else %} {{product.name}}
+                          {% endif %} </a> </div>
+                        <div class="item-content">
+                          <div class="item-price">
+                            <div class="price-box"> <span class="regular-price"> <span class="price">{% if LANGUAGE_CODE == 'ar' %}{{ product.currency_ar }} {% else %}{{ product.currency }} {% endif %}{{ product.price }}</span></span>
+                                <p class="old-price"> <span class="price-label">Regular Price:</span> <span class="price">{% if LANGUAGE_CODE == 'ar' %}{{ product.currency_ar }} {% else %}{{ product.currency }}{% endif %} {{ product.old_price }} </span> </p>
+                            </div>
+                          </div>
+                         <div class="actions">
+                            <div class="add_cart">
+                              <button class="button btn-cart" type="button"><span><a href="{{ p.get_absolute_url }}"> Add to Cart</a></span></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              {% endfor %}
+            </div>
+            <div class="toolbar bottom">
+              <div class="row">
+                <div class="col-sm-6 text-left">
+                  <div class="pages">
+                   {% if products.has_other_pages %}
+                    <ul class="pagination">
+                    {% if products.has_previous %}
+                      <li><a href="?page={{ products.previous_page_number }}">« </a></li>
+                        {% else %}
+                       <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in products.paginator.page_range %}
+                          {% if products.number == i %}
+                      <li class="active"><a href="?page={{ i }}">{{ i }} </a></li>
+                        {% else %}
+                      <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if products.has_next %}
+                      <li><a href="?page={{ products.next_page_number }}"> »</a></li>
+                        {% else %}
+                      <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                    </ul>
+                  {% endif %}
+                  </div>
+                </div>
+                <div class="col-sm-6 text-right">Showing 1 to 15 of 25 (2 Pages)</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Main Container End --> 
+
+</div>
+{% endblock %}

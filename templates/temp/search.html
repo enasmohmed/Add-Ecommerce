@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <ul>
+              <li class="home"> <a href="/" title="Go to Home Page"><i class="fa fa-home"></i> Home</a> <span>/</span></li>
+              <li> <strong>Search </strong> </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Breadcrumbs End -->
+{% for product in products %}
+<div class="container">
+	<div class="row">
+		<h2 class="text-center">Research Results</h2>
+		<div class="card " style="width: 18rem;background-color: #ddd;border-radius: 10px; margin-bottom: 15px;">
+		  <img class="card-img-top" src="{{product.Image.url}}" alt="Card image cap" style="width:100%">
+		  <div class="card-body text-center">
+			<h5 class="card-title">{{ product.name}}</h5>
+			<a href="{{ product.get_absolute_url}}" class="card-link">{{ product.name}}</a>
+			<p class="card-text">{{ product.description|truncatewords:12 }}</p>
+			<a href="{{ product.get_absolute_url}}" class="btn btn-primary">View Product</a>
+		  </div>
+	</div>
+	</div>
+</div>
+{% endfor %}
+
+{% endblock %}

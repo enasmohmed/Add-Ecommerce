@@ -1,0 +1,16 @@
+
+<form class='d-flex justify-content-left' method='POST' action='{% url "wishlist:list_update"   %}'
+      data-endpoint='{% url "wishlist:list_update"  %}' class="form">
+    {% csrf_token %}
+    <input type='hidden' name='product_id' value='{{ product.id }}' />
+    <input type='hidden' name='product_slug' value='{{ product.slug }}' />
+    <input type='hidden' name='product_name' value='{{ product.name }}' />
+      <span class='submit-span'>
+    {% if product in wishlist.products.all %}
+        <button type='submit' class='btn btn-link'>Remove <i class="fa fa-heart ml-1"></i></button>
+    {% else %}
+        <button class="btn btn-default btn-md" type="submit">Add to wishlist <i class="fa fa-heart ml-1"></i></button>
+    {% endif %}
+    </span>
+</form>
+

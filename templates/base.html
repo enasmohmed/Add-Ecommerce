@@ -1,0 +1,603 @@
+{% load static %}
+<!DOCTYPE html>
+{% load i18n %}
+<html>
+<head>
+<meta charset="utf-8">
+<!--[if IE]>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<![endif]-->
+<meta name="description" content="Fabulous is a creative, clean, fully responsive, powerful and multipurpose HTML Template with latest website trends. Perfect to all type of fashion stores.">
+<meta name="keywords" content="HTML,CSS,womens clothes,fashion,mens fashion,fashion show,fashion week">
+<meta name="author" content="JTV">
+<title>{% trans 'Ecommerce SunMas' %}</title>
+
+<!-- SunMas Icon -->
+<link rel="icon" href='{% static "img/images/img/logo-2.png" %}' type="image/x-icon" />
+
+
+<!-- Mobile Specific -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- CSS Style -->
+<link rel="stylesheet" type="text/css" href='{% static "css/styles.css" %}' media="all">
+
+</head>
+<body class="cms-index-index cms-home-page">
+<!-- Mobile Menu -->
+<div id="jtv-mobile-menu">
+  <ul>
+    <li>
+      <div class="mm-search">
+        <form id="mob-search" name="search" action="{% url 'search:search' %}" method="GET" value="{{request.GET.q}">
+          <div class="input-group">
+            <div class="input-group-btn">
+              <input type="text" class="form-control simple" name="q"  value="{{ request.GET.q }}" placeholder="Search ..." >
+              <button class="btn btn-default" type="submit" title="Search" id="submit-button"><i class="fa fa-search"></i> </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </li>
+    <li><a href="/">Home</a></li>
+   {% get_current_language as LANGUAGE_CODE %}
+   {% for parent  in categories %}
+    <li><a href="{{parent.slug}}">
+      {% if LANGUAGE_CODE == 'ar' %}{{ parent.name_ar }}
+      {% elif  LANGUAGE_CODE == 'fi' %}{{ parent.name_fi }}
+      {% else %} {{parent.name}} {% endif %}
+        </a>
+      {% get_current_language as LANGUAGE_CODE %}
+      {% for sub in parent.childern.all %}
+      <ul>
+        <li><a href='{% url "Shop:product_list" %}?category={{sub.full_name_string}}'>
+          {% if LANGUAGE_CODE == 'ar' %}{{ sub.name_ar }}
+          {% elif  LANGUAGE_CODE == 'fi' %}{{ sub.name_fi }}
+          {% else %} {{sub.name}}{% endif %}
+            </a>
+          {% get_current_language as LANGUAGE_CODE %}
+           {% for child in sub.childern.all %}
+          <ul>
+            <li><a href='{% url "Shop:product_list" %}?category={{child.full_name_string}}'>
+              {% if LANGUAGE_CODE == 'ar' %}{{ child.name_ar }}
+              {% elif  LANGUAGE_CODE == 'fi' %}{{ child.name_fi }}
+              {% else %}{{child.name}}{% endif %}
+               </a>
+            </li>
+          </ul>
+           {% endfor %}
+        </li>
+      </ul>
+      {% endfor %}
+    </li>
+   {% endfor %}
+    <li><a href="#">{% trans 'Page' %}</a>
+      <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'Shop:about' %}">Contact Us</a></li>
+        <li><a href="{% url 'Shop:product_list' %}">Shop grid</a></li>
+        <li><a href="{% url 'cart:cart_detail' %}">Shopping Cart</a></li>
+        <li><a href="{% url 'orders:order_create' %}">Created Order</a></li>
+        <li><a href="{% url 'comments:comment_create' %}">Create Comments</a></li>
+        <li><a href="{% url 'accounts:login' %}"><span>LogIn</span></a></li>
+        <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
+        <li><a href="{% url 'wishlist:wishlist_detail'%}">Wish List</a></li>
+        <li><a href="{% url 'search:search'%}">Search Product</a></li>
+      </ul>
+    </li>
+    <li><a href="{% url 'Shop:about' %}">{% trans 'Contact Us' %}</a></li>
+  </ul>
+  <div class="top-links">
+    <ul class="links">
+      <li><a title="My Account" href="{% url 'wishlist:wishlist_detail' %}">{% trans 'Wishlist' %}</a></li>
+      <li><a title="Wishlist" href="{% url 'comments:comment_create' %}">{% trans 'Comment ' %}</a></li>
+      <li><a title="Checkout" href="{% url 'orders:order_create' %}">{% trans 'Checkout' %}</a></li>
+       <li class="dropdown last">
+        {% if request.user.is_authenticated %}
+        <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-user" aria-hidden="true"></i> {{ request.user.username }} <b class="caret"></b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="min-width: 100px;">
+          <a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>  {% trans 'logout' %}</a>
+          {% else %}
+          <a class="dropdown-item" href="{% url 'accounts:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> {% trans 'Log In' %}</a><hr>
+          <a class="dropdown-item" href="{% url 'accounts:signup' %}"><i class="fa fa-user-plus" aria-hidden="true"></i> {% trans 'Sign Up' %}</a>
+        </div>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+  <div class="main-app">
+    <div class="sidebar">
+      <nav class="main-nav">
+        <ul class="main-menu">
+          <li class="menu-item">
+            <a href="/" class="menu-a" target="_blank">
+              <div class="menu-txt-hld">
+                <i class="fa fa-home menu-icon"></i>
+                <span class="menu-txt">Home</span>
+              </div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'wishlist:wishlist_detail' %}" class="menu-a" target="_blank">
+              <div class="menu-txt-hld">
+                <i class="fa fa-heart-o menu-icon"></i>
+                <span class="menu-txt">wishlist</span>
+              </div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'accounts:signup' %}" class="menu-a" target="_blank">
+              <div class="menu-txt-hld">
+                <i class="fa fa-user-plus menu-icon"></i>
+                <span class="menu-txt">New Account</span>
+              </div>
+            </a>
+          </li>
+        <li class="menu-item">
+            <a href="{% url 'comments:comment_create' %}" class="menu-a" target="_blank">
+              <div class="menu-txt-hld">
+                <i class="fa fa-comment-o menu-icon"></i>
+                <span class="menu-txt">Write a comment</span>
+              </div>
+            </a>
+        </li>
+         
+          <div class="cell ">
+            <div class="share-wrapper right">
+              <div class="share-action icon-share"></div>
+              <div class="share-container">
+                <a class="share-btn tl icon-google-plus" href='#'></a>    
+                <a class="share-btn tr icon-twitter" href='#'></a>    
+                <a class="share-btn br icon-facebook" href='#'></a>    
+                <a class="share-btn bl icon-linkedin" href='#'></a>    
+              </div>
+            </div>
+          </div>
+        <!-- <div class="dropdown">
+            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-share-alt-square menu-icon"></i>
+            </button>
+            <div class="dropdown-menu"  style="text-align: center;min-width: 111px;font-size: 17px;line-height: 1.5;">
+                <a class="dropdown-item" href="#"><i class="fa fa-facebook-square"></i> Facebook </a><br>
+                <a class="dropdown-item" href="#"><i class="fa fa-google-plus"></i> Google</a><br>
+                <a class="dropdown-item" href="#"><i class="fa fa-twitter"></i> Twitter</a><br>
+                <a class="dropdown-item" href="#"><i class="fa fa-instagram"></i> Instagram</a>
+            </div>
+        </div> -->
+        <br>
+      
+        <li class="menu-item">
+            <a href="{% url 'accounts:logout' %}" class="menu-a" target="_blank">
+              <div class="menu-txt-hld">
+                <i class="fa fa-sign-out  menu-icon"></i>
+                <span class="menu-txt">Logout for website</span>
+              </div>
+            </a>
+        </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+
+  <div id="page">
+     <!-- Header -->
+  <header class="header trans_300">
+		<!-- Top Navigation -->
+		<div class="top_nav">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-sm-12">
+						<div class="top_nav_left">
+							<div class="topbar-social">
+								<a href="#" class="topbar-social-item fa fa-whatsapp"> whatsapp: +966500057975</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-12">
+						<div class="top_nav_right">
+							<ul class="top_nav_menu">
+
+								<!-- Currency / Language / My Account -->
+								<li class="language">
+									<a href="#">
+									<i class="fa fa-language"></i>   {% trans 'Language' %}
+										<i class="fa fa-angle-down"></i>
+									</a>
+									<ul class="language_selection">
+                    <li><a href="/change-language/?return_url={{ request.path }}&lang_code=en">English</a></li>
+                    <li><a href="/change-language/?return_url={{ request.path }}&lang_code=ar">Arabic</a></li>
+										<li><a href="/change-language/?return_url={{ request.path }}&lang_code=fi">Filipino</a></li>
+										<!-- <li><a href="/change-language/?return_url={{ request.path }}&lang_code=ur">Urdu</a></li> -->
+									</ul>
+								</li>
+								<li class="account">
+									<a href="#">
+										My Account
+										<i class="fa fa-angle-down"></i>
+									</a>
+									<ul class="account_selection">
+										<li><a href="{% url 'accounts:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a></li>
+										<li><a href="{% url 'accounts:signup' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+  <header>
+    <div class="header-container">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-sm-3 col-xs-12">
+            <div class="logo"><a title="ecommerce Template" href="/"><img class="logo-img" alt="ecommerce Template" src='{% static "img/images/img/logo.png" %}'></a></div>
+            <div class="nav-icon">
+              <div class="mega-container visible-lg visible-md visible-sm">
+                <div class="navleft-container">
+                  <div class="mega-menu-title">
+                    <h3><i class="fa fa-navicon"></i>{% trans 'Categories' %}</h3>
+                  </div>
+                  <div class="mega-menu-category">
+                    <ul class="nav">
+                      <li class="nosub"><a href="/">{% trans 'Home' %}</a></li>
+                      {% get_current_language as LANGUAGE_CODE %}
+                      {% for parent  in categories %}
+                      <li><a href="{{parent.slug}}">
+                          {% if LANGUAGE_CODE == 'ar' %}{{ parent.name_ar }}
+                          {% elif  LANGUAGE_CODE == 'fi' %}{{ parent.name_fi }}
+                          {% else %} {{parent.name}} {% endif %}</a>
+                        <div class="wrap-popup">
+                          <div class="popup">
+                            <div class="row">
+                              <div class="col-md-4 col-sm-6">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% for sub in parent.childern.all %}
+                                <h3><a href='{% url "Shop:product_list" %}?category={{sub.full_name_string}}'>{% if LANGUAGE_CODE == 'ar' %}{{ sub.name_ar }}
+                                  {% elif  LANGUAGE_CODE == 'fi' %}{{ sub.name_fi }}
+                                  {% else %} {{sub.name}}{% endif %}</a>
+                                </h3>
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% for child in sub.childern.all %}
+                                <ul class="nav">
+                                  <li><a href='{% url "Shop:product_list" %}?category={{child.full_name_string}}'>
+                                    {% if LANGUAGE_CODE == 'ar' %}{{ child.name_ar }}
+                                    {% elif  LANGUAGE_CODE == 'fi' %}{{ child.name_fi }}
+                                    {% else %}{{child.name}}{% endif %}</a>
+                                  </li>
+                                </ul>
+                                {% endfor %}
+                            </div>
+                              {% endfor %}
+                              <div class="col-md-4 has-sep hidden-sm">
+                                <div class="custom-menu-right">
+                                  <div class="box-banner media">
+                                    <div class="add-desc">
+                                      <h3>Top<br>
+                                        Glass </h3>
+                                      <div class="price-sale">2018</div>
+                                      <a href="#">Shop Now</a> </div>
+                                    <div class="add-right"><img src="{% static 'img/images/jtv-menu-banner2.jpg' %}" alt="Top Glass" class="img-responsive"></div>
+                                  </div>
+                                  <div class="box-banner media">
+                                    <div class="add-desc">
+                                      <h3>Save</h3>
+                                      <div class="price-sale">35%</div>
+                                      <a href="#">Buy Now</a> </div>
+                                    <div class="add-right"><img src="{% static 'img/images/jtv-menu-banner3.jpg' %}" alt="Save 35%" class="img-responsive"></div>
+                                  </div>
+                                </div>
+                              </div>
+                      </li>
+                      {% endfor %}
+                      <li><a href="#">{% trans 'Page' %}</a>
+                        <div class="wrap-popup">
+                          <div class="popup">
+                            <div class="row">
+                              <div class="col-sm-4">
+                                <ul class="nav">
+                                  <li><a href="{% url 'home' %}"><span>Home</span></a></li>
+                                  <li><a href="{% url 'Shop:about' %}"><span>Contact Us</span></a></li>
+                                  <li><a href="{% url 'Shop:product_list' %}"><span>Shop grid</span></a></li>
+                                  <li><a href="{% url 'cart:cart_detail' %}"><span>Shopping Cart</span></a></li>
+                                  <li><a href="{% url 'orders:order_create' %}"><span>Created Order</span></a></li>
+                                  <li><a href="{% url 'comments:comment_create' %}"><span>Create Comments</span></a></li>
+                                </ul>
+                              </div>
+                              <div class="col-sm-4">
+                                <ul class="nav">
+                                  <li><a href="{% url 'accounts:login' %}"><span>LogIn</span></a></li>
+                                  <li><a href="{% url 'accounts:signup' %}"><span>Sign Up</span></a></li>
+                                  <li><a href="{% url 'wishlist:wishlist_detail'%}"><span>Wish List</span></a></li>
+                                  <li><a href="{% url 'search:search'%}"><span>Search Product</span></a></li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="nosub"><a href="{% url 'Shop:about' %}">{% trans 'Contact Us' %}</a></li>
+                    </ul>
+                    <div class="side-banner"><img src='{% static "img/images/top-banner.jpg" %}' alt="Flash Sale" class="img-responsive"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-9 col-sm-9 col-xs-12 jtv-rhs-header">
+             <div class="jtv-mob-toggle-wrap">
+              <div class="mm-toggle"><i class="fa fa-reorder"></i><span class="mm-label">Menu</span></div>
+            </div>
+            <div class="jtv-header-box">
+              <div class="search_cart_block">
+                <div class="search-box hidden-xs">
+                  <form id="search_mini_form" action="{% url 'search:search' %}" method="GET" value="{{request.GET.q}">
+                    <input id="search" type="text" name="q" value="{{ request.GET.q }}" class="searchbox" placeholder="search product name..." maxlength="128">
+                    <button type="submit" title="Search" class="search-btn-bg" id="submit-button"><span class="hidden-sm">{% trans 'Search' %}</span><i class="fa fa-search hidden-xs hidden-lg hidden-md"></i></button>
+                  </form>
+                </div>
+                <div class="right_menu">
+                  <div class="menu_top">
+                    <div class="top-cart-contain pull-right">
+                      <div class="mini-cart">
+                        <div class="basket"><a class="basket-icon" href="{% url 'cart:cart_detail' %}"><i class="fa fa-shopping-basket"></i> {% trans 'Shopping Cart' %}</a>
+                          <div class="top-cart-content">
+                            <div class="block-subtitle">
+                              {% with totail_items=cart|length %}
+                              {% if cart|length > 0 %}
+                                  <a href='{% url "cart:cart_detail" %}'>
+                                    <div class="top-subtotal">{{ totail_items }} item , <span class="price">{{ totail_items|pluralize }}, {{ cart.get_total_price }}</span></div>
+                                  </a>
+                                  {% else %}
+                                  {% trans 'Your cart is empty.' %}
+                              {% endif %}
+                            {% endwith %}
+                            </div>
+                            <ul class="mini-products-list" id="cart-sidebar">
+                              {% if cart %}
+                                {% for item in cart %}
+                              {% with  product=item.product %}
+                              <li class="item">
+                                <div class="item-inner"><a class="product-image" title="product tilte is here" href="{{product.get_absolute_url}}"><img alt="product tilte is here" src="{{product.Image.url}}"></a>
+                                  <div class="product-details">
+                                    <div class="access"><a class="btn-remove1" title="Remove This Item" href="{% url 'cart:cart_remove' product.id %}">Remove</a> </div>
+                                    <p class="product-name"><a href="{{product.get_absolute_url}}">{{product.name}}</a></p>
+                                    <strong>1</strong> x <span class="price">{{item.price}} SR</span></div>
+                                </div>
+                              </li>
+                              {% endwith %}
+                              {% endfor %}
+                              {% else %}
+                              {% endif %}
+                            </ul>
+                            <div class="actions"> <a href="{% url 'cart:cart_detail' %}" class="view-cart"><span>{% trans 'View Cart' %}</span></a>
+                              <button  class="btn-checkout" title="Checkout" type="button"><span><a href="{% url 'orders:order_create' %}"> {% trans 'Checkout' %}</a></span></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            <div class="top_section hidden-xs">
+                  <div class="toplinks">
+                      <div class="site-dir hidden-xs"> <a class="hidden-sm" href="#"><i class="fa fa-whatsapp"></i> <strong>{% trans 'Whatsapp' %}:</strong> +966500057975</a> <a href="mailto:support@example.com"><i class="fa fa-envelope"></i>  Sunmascompany@gmail.com</a> </div>
+                      <ul class="links">
+                        <li><a title="My Wishlist" href="{% url 'wishlist:wishlist_detail' %}"><i class="fa fa-heart" aria-hidden="true"></i>  {% trans 'Wishlist' %}</a></li>
+                        <li><a title="Add to Comment For Website" href="{% url 'comments:comment_create' %}"><i class="fa fa-comment" aria-hidden="true"></i>  {% trans 'Comment ' %}</a></li>
+                        <li><a title="Checkout" href="{% url 'orders:order_create' %}">{% trans 'Checkout' %}</a></li>
+                        <li class="dropdown">
+                          {% if request.user.is_authenticated %}
+                          <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user" aria-hidden="true"></i> {{ request.user.username }} <b class="caret"></b>
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="min-width: 100px;">
+                            <a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>  {% trans 'logout' %}</a>
+                            {% else %}
+                            <a class="dropdown-item" href="{% url 'accounts:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> {% trans 'Log In' %}</a>
+                            <a class="dropdown-item" href="{% url 'accounts:signup' %}"><i class="fa fa-user-plus" aria-hidden="true"></i> {% trans 'Sign Up' %}</a>
+                          </div>
+                          {% endif %}
+                        </li>
+                      </ul>
+                    </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- end header -->
+
+
+
+    {% block content %}
+
+    {% endblock %}
+
+     <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="news-letter">
+        <div class="container">
+          <div class="heading text-center">
+            <h2>{% trans 'Just Subscribe Now!' %}</h2>
+            <span>{% trans 'By sending an email or sending a message via mail.' %}</span> </div>
+          <form>
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit"><a href="mailto:Sunmascompany@gmail.com" style="font-size: 20px;color: #fff;font-weight: 500;">{% trans 'Send Now' %}</a></button>
+          </form>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+            <img class="footer-img" alt="ecommerce Template" src='{% static "img/images/img/logo.png" %}'>
+            <!-- <h4>About</h4> -->
+            <div class="contacts-info">
+              <p>{% trans 'Sun Mas is a leader in the Online luxury discount watch industry.' %}</p>
+              <address>
+              <i class="fa fa-location-arrow"></i> <span>{% trans 'Company  Sun Mas' %},<br>
+                  {% trans 'Jeddah-Saudi Arabia' %}</span>
+              </address>
+              <div class="phone-footer"><i class="fa fa-phone"></i> +966500057975</div>
+              <div class="email-footer"><i class="fa fa-envelope"></i> <a href="mailto:Sunmascompany@gmail.com">Sunmascompany@gmail.com</a> </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-2 col-sm-6 col-xs-12" style="margin-top: 2%;">
+            <h4>Helpful Links</h4>
+            <ul class="links">
+              <li><a href="#">shopping cart</a></li>
+              <li><a href="#">Check Order</a></li>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Products</a></li>
+              <li><a href="#">Wishlist</a></li>
+            </ul>
+          </div>
+          <div class="col-xs-12 col-lg-3 col-md-4 col-sm-6" style="margin-top: 2%;">
+            <div class="social">
+              <h4>Follow Us</h4>
+              <ul>
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                <!-- <li><a href="#"><i class="fa fa-rss"></i></a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-youtube"></i></a></li> -->
+                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                <!-- <li><a href="#"><i class="fa fa-pinterest"></i></a></li> -->
+                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                <!-- <li><a href="#"><i class="fa fa-skype"></i></a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-vimeo"></i></a></li> -->
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-xs-12 coppyright text-center">© 2020 Sun Mas, All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  </div>
+
+<!-- JavaScript -->
+<script src="//code.tidio.co/r9cgop1k9yzbrfyavpbyaqs8bp2ofczb.js" async></script>
+<script src='{% static "js/jquery.min.js" %}'></script>
+<script src='{% static "js/bootstrap.min.js" %}'></script>
+<script src='{% static "js/revslider.js" %}'></script>
+
+<script src='{% static "js/owl.carousel.min.js" %}'></script>
+<script src='{% static "js/mob-menu.js" %}'></script>
+<script src='{% static "js/main.js" %}'></script>
+<script src='{% static "js/countdown.js" %}'></script>
+<script src='{% static "js/cloud-zoom.js" %}'></script>
+
+<script>
+jQuery(document).ready(function(){
+jQuery('#rev_slider_1').show().revolution({
+dottedOverlay: 'none',
+delay: 5000,
+startwidth: 858,
+startheight: 500,
+
+hideThumbs: 200,
+thumbWidth: 200,
+thumbHeight: 50,
+thumbAmount: 2,
+
+navigationType: 'thumb',
+navigationArrows: 'solo',
+navigationStyle: 'round',
+
+touchenabled: 'on',
+onHoverStop: 'on',
+
+swipe_velocity: 0.7,
+swipe_min_touches: 1,
+swipe_max_touches: 1,
+drag_block_vertical: false,
+
+spinner: 'spinner0',
+keyboardNavigation: 'off',
+
+navigationHAlign: 'center',
+navigationVAlign: 'bottom',
+navigationHOffset: 0,
+navigationVOffset: 20,
+
+soloArrowLeftHalign: 'left',
+soloArrowLeftValign: 'center',
+soloArrowLeftHOffset: 20,
+soloArrowLeftVOffset: 0,
+
+soloArrowRightHalign: 'right',
+soloArrowRightValign: 'center',
+soloArrowRightHOffset: 20,
+soloArrowRightVOffset: 0,
+
+shadow: 0,
+fullWidth: 'on',
+fullScreen: 'off',
+
+stopLoop: 'off',
+stopAfterLoops: -1,
+stopAtSlide: -1,
+
+shuffle: 'off',
+
+autoHeight: 'off',
+forceFullWidth: 'on',
+fullScreenAlignForce: 'off',
+minFullScreenHeight: 0,
+hideNavDelayOnMobile: 1500,
+
+hideThumbsOnMobile: 'off',
+hideBulletsOnMobile: 'off',
+hideArrowsOnMobile: 'off',
+hideThumbsUnderResolution: 0,
+
+hideSliderAtLimit: 0,
+hideCaptionAtLimit: 0,
+hideAllCaptionAtLilmit: 0,
+startWithSlide: 0,
+fullScreenOffsetContainer: ''
+});
+});
+</script>
+<!-- Hot Deals Timer -->
+<script>
+var dthen1 = new Date("12/25/17 11:59:00 PM");
+start = "08/04/15 03:02:11 AM";
+start_date = Date.parse(start);
+var dnow1 = new Date(start_date);
+if (CountStepper > 0)
+ddiff = new Date((dnow1) - (dthen1));
+else
+ddiff = new Date((dthen1) - (dnow1));
+gsecs1 = Math.floor(ddiff.valueOf() / 1000);
+
+var iid1 = "countbox_1";
+CountBack_slider(gsecs1, "countbox_1", 1);
+</script>
+
+</body>
+</html>

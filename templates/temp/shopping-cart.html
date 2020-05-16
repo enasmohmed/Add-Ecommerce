@@ -1,0 +1,150 @@
+﻿{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<body class="cms-index-index cms-home-page">
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <ul>
+              <li class="home"> <a href="/" title="Go to Home Page"><i class="fa fa-home"></i> Home</a> <span>/</span></li>
+              <li> <strong>Shopping cart </strong> </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Breadcrumbs End -->
+
+    <section class="main-container col1-layout">
+      <div class="main container">
+        <div class="row">
+          <div class="col-sm-12 col-xs-12">
+            <div class="product-area">
+              <div class="title-tab-product-category">
+                <div class="text-center">
+                  <ul class="nav jtv-heading-style" role="tablist">
+                    <li role="presentation" class="active"><a href="#cart" aria-controls="cart" role="tab" data-toggle="tab">1 Shopping cart</a></li>
+                     <span><a class="button-checkout" href="{% url 'orders:order_create' %}">2 CheckOut</a></span>
+                  </ul>
+                </div>
+              </div>
+              <div class="content-tab-product-category"> 
+                <!-- Tab panes -->
+                <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade in active" id="cart"> 
+                    <!-- cart are start-->
+                    <div class="cart-page-area">
+<!--                      <form >-->
+                        <div class="table-responsive">
+                          <table class="shop-cart-table">
+                            <thead>
+                              <tr>
+                                <th class="product-thumbnail ">Image</th>
+                                <th class="product-name ">Product Name</th>
+                                <th class="product-price ">Unit Price</th>
+                                <th class="product-quantity">Quantity</th>
+                                <th class="product-subtotal ">Total</th>
+                                <th class="product-remove">Remove</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                          {% if cart %}
+                            {% for item in cart %}
+                              {% with  product=item.product %}
+                              <tr class="cart_item">
+                                <td class="item-img"><a href="{{product.get_absolute_url}}">
+                                  <img src="{% if product.Image %}{{product.Image.url}}{% endif %}"
+                                  alt="Product tilte is here" style="width: 100%;"> </a></td>
+                                <td class="item-title"><a href="{{product.get_absolute_url}}">{{product.name}}</a></td>
+                                <td class="item-price">{{item.price}} {{ item.currency }}</td>
+                                <td>
+                                   <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    {{ item.update_quantity_form.quantity }}
+                                    {{ item.update_quantity_form.update }}
+                                    <input type="submit" value="Update" class="btn btn-info">
+                                </form>
+                                 </td>
+                                <td class="total-price"><strong>{{item.total_price}} {{ item.currency }}</strong></td>
+                                <td class="remove-item"><a href="{% url 'cart:cart_remove' product.id %}"><i class="fa fa-trash-o"></i></a></td>
+                              </tr>
+                              {% endwith %}
+                            {% endfor %}
+                           {% else %}
+                          <p class="lead">your wish list is empty.</p>
+                          {% endif %}
+                             <tr style="background-color: #232f3e;color: #fff;font-size: 20px;font-style: oblique;">
+                                  <td><b>Total</b></td>
+                                  <td colspan="4"></td>
+                                  <td colspan="num"><b>SR. {{ cart.get_total_price }}</b></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="cart-bottom-area">
+                          <div class="row">
+                            <div class="col-md-8 col-sm-7 col-xs-12">
+                              <div class="update-coupne-area">
+                                <div class="update-continue-btn text-right">
+                                  <button class="button btn-continue" title="Continue Shopping" type="button"><span><a href="{% url 'Shop:home' %}"> Continue Shopping</a></span></button>
+                                  <button class="button btn-empty" title="Checkout" value="empty_cart" name="update_cart_action" type="submit"><span><a href="{% url 'orders:order_create' %}"> checkout</a></span></button>
+                                  <button class="button btn-update" title="Update Cart" value="update_qty" name="update_cart_action" type="submit"><span><a href="{% url 'cart:cart_detail' %}"> Update Cart</a></span></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+<!--                      </form>-->
+                    </div>
+                    <!-- cart are end--> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container">
+      <div class="jtv-crosssel-pro">
+        <div class="jtv-new-title">
+          <h2>you may be interested</h2>
+        </div>
+        <div class="category-products">
+          <ul class="products-grid">
+            {% for inter in interested_pro %}
+            <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-6">
+              <div class="item-inner">
+                <div class="item-img">
+                  <div class="item-img-info"><a class="product-image" title="Product tilte is here" href="{{ inter.get_absolute_url }}"> <img alt="Product tilte is here" src="{{inter.Image.url}}"> </a>
+                    <div class="new-label new-top-left">new</div>
+                    <div class="sale-label sale-top-right">sale</div>
+                </div>
+                </div>
+                <div class="item-info">
+                  <div class="info-inner">
+                    <div class="item-title"> <a title="Product tilte is here" href="{{ inter.get_absolute_url }}">{{inter.name}} </a> </div>
+                    <div class="item-content">
+                      <div class="item-price">
+                        <div class="price-box"> <span class="regular-price"> <span class="price">{{ inter.price }}{{ inter.currency }}</span></span></div>
+                      </div>
+                       <div class="actions">
+                        <div class="add_cart">
+                          <a href="{{ rel.get_absolute_url }}" class="card-link"><i class="fa fa-shopping-cart"></i>  Add to cart</a><hr style="margin-top: 8px;margin-bottom: 9px;border: 0;border-top: 1px solid #b1acac;">
+                          <a href="{{ rel.get_absolute_url }}" class="card-link"><i class="fa fa-heart"></i>  Add to wishlist</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div> 
+</body>
+{% endblock content %}

@@ -1,0 +1,64 @@
+﻿{% extends 'base.html' %}
+{% load static  %}
+{% block content %}
+<body class="wishlist-page">
+<div id="page">
+  <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <ul>
+              <li class="home"> <a href="/" title="Go to Home Page">Home</a> <span>/</span></li>
+              <li> <strong>WishList</strong> </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Breadcrumbs End -->
+  <div class="main-container col1-layout">
+    <div class="container">
+      <div class="row">
+        <section class="col-sm-12 col-xs-12">
+          <div class="cart-page-area">
+            <h2 class="h2-responsive text-center mt-2">My Wishlist <i class="fa fa-heart"></i></h2>
+              <div class="table-responsive">
+                <table class="shop-cart-table">
+                  <thead>
+                    <tr>
+                      <th class="product-thumbnail ">Image</th>
+                      <th class="product-name ">Product Name</th>
+                      <th class="product-price ">Unit Price</th>
+                      <th class="product-subtotal ">Stock</th>
+                      <th class="product-quantity">Add Item</th>
+                      <th class="product-remove">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if wishlist %}
+                    {% for product in wishlist %}
+                    <tr class="cart_item">
+                      <td class="item-img"><a href="{{ product.get_absolute_url }}"><img alt="Product tilte is here" src="{{product.Image.url}}" style="width: 100%;"> </a></td>
+                      <td class="item-title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></td>
+                      <td class="item-price">{{product.price}} </td>
+                      <td class="item-qty"> In Stock </td>
+                      <td class="total-price"><a class="btn-def btn2" href="{{ product.get_absolute_url }}">Add To Cart</a></td>
+                      <td class="remove-item">{% include 'wishlist_remove.html' with product_id=product.id wishlist=wishlist %}</td>
+                    </tr>
+                  {% endfor %}
+                    {% else %}
+                  <p class="lead">Your Wish List is Empty.</p>
+                  {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            <a href="{% url 'Shop:product_list' %}" class="btn btn-warning">Continue Shopping</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+{% endblock %}
