@@ -39,7 +39,7 @@ paypal==1.2.5
 Pillow==7.0.0
 pipenv==2018.11.26
 pycparser==2.20
-PyJWT==1.7.1
+PyJWT==2.4.0
 pyOpenSSL==19.1.0
 Pyphen==0.9.5
 python3-openid==3.1.0
